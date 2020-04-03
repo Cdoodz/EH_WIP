@@ -1,0 +1,33 @@
+
+https://stackoverflow.com/questions/25434910/excel-vba-copying-template-worksheet-and-linking-cell-and-naming-sheet
+
+Sub CreateLinkedSheets()
+
+    Dim rngCreateSheets As Range
+    Dim oCell As Range
+
+    Dim oTemplate As Worksheet
+    Dim oSummary As Worksheet
+    Dim oDest As Worksheet
+
+    Set oTemplate = Worksheets("Template")
+    Set oSummary = Worksheets("Summary")
+    Set rngCreateSheets = Worksheets("Summary").Range("A1", Range("A1").End(xlDown))
+    'Above line assumes NO blank cells in your list of school supplies
+
+    For Each oCell In rngCreateSheets.Cells
+
+        oTemplate.Copy After:=Worksheets(Sheets.Count)
+        Set oDest = ActiveSheet
+        oDest.Name = oCell.Value
+
+        oDest.Range("A1").Value = oCell.Value
+
+        oSummary.Hyperlinks.Add Anchor:=oCell, Address:="", SubAddress:= _
+            oDest.Name & "!A1", TextToDisplay:=oDest.Name
+    Next oCell
+
+End Sub
+
+
+VBA TABLE LIST OBJECTS:  https://exceloffthegrid.com/vba-excel-tables-code/
