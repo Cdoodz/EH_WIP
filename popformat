@@ -1,0 +1,40 @@
+Sub POP_Format()
+
+'Optimize Macro Speed
+Application.ScreenUpdating = False
+Application.EnableEvents = False
+Application.Calculation = xlCalculationManual
+
+'DECLARE VARIABLES
+Dim s2 As Worksheet
+Dim lr As Range
+Dim rwrn As Range
+Dim row As Range
+
+'SET DECLARED VARIABLES
+Set s2 = Sheets("POPREP")
+Set lr = Range("A10000").End(xlUp)
+Set rwrn = s2.Range("A1:A" & lastrow)
+
+For Each row In rwrn
+On Error Resume Next
+    Columns("B").SpecialCells(xlBlanks).EntireRow.Delete
+Next row
+
+With rwrn
+ .Replace "Current Population List", True, xlWhole
+ .SpecialCells(xlCellTypeConstants, 4).EntireRow.Delete
+ End With
+
+With rwrn
+ .Replace "VMEMP", True, xlWhole
+ .SpecialCells(xlCellTypeConstants, 4).EntireRow.Delete
+ End With
+
+
+'Turn back on screen updating etc
+Application.ScreenUpdating = True
+Application.EnableEvents = True
+Application.Calculation = xlCalculationAutomatic
+
+End Sub
