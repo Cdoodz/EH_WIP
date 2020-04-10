@@ -116,26 +116,27 @@ Sub PopRepFormat()
 
 'DECLARE VARIABLES
 Dim s2 As Worksheet
-Dim lar As Integer
-Dim rwrn As Range
+Dim lastrow As Integer
+Dim rwr As Range
 Dim row As Range
 
 'SET DECLARED VARIABLES
 Set s2 = Sheets("POPREP")
-Set lar = s2.Range("A10000").End(xlUp).row
-Set rwrn = s2.Range("A4:A" & lr)
+lastrow = s2.Range("A10000").End(xlUp).row
+Set rwr = s2.Range("A4:A" & lastrow)
 
-For Each row In rwrn
+
+For Each row In rwr
 On Error Resume Next
     Columns("B4:B").SpecialCells(xlBlanks).EntireRow.Delete
 Next row
 
-With rwrn
+With rwr
  .Replace "Current Population List", True, xlWhole
  .SpecialCells(xlCellTypeConstants, 4).EntireRow.Delete
  End With
 
-With rwrn
+With rwr
  .Replace "VMEMP", True, xlWhole
  .SpecialCells(xlCellTypeConstants, 4).EntireRow.Delete
  End With
@@ -153,27 +154,38 @@ Sub CombiNums()
 Dim s2 As Worksheet
 Dim s3 As Worksheet
 Dim s4 As Worksheet
-Dim lastrow As Long
+Dim lastrow As Integer
+Dim row As Range
 
 'SET DECLARED VARIABLES
 Set s2 = Sheets("POPREP")
 Set s3 = Sheets("JEL")
 Set s4 = Sheets("CONS")
-Set lastrow = Cells(Rows.Count, 1).End(xlUp).row
+lastrow = ActiveSheet.Range("A20000").End(xlUp).row
+'s4.Range("A20000").End(xlUp).row
 
 'Copy empnos from POP report
-s2.Range("A4").End(xlDown).Select
+
+ActiveWorkbook.Sheets("POPREP").Select
+    Sheets("POPREP").Range("A4", Range("a4").End(xlDown)).Select
     Selection.Copy
-s4.Range("A4").Select
+    
+ActiveWorkbook.Sheets("CONS").Select
+    Sheets("CONS").Range("A1").Select
     Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
         :=False, Transpose:=False
         
 'Copy empnos from JEL report
-s3.Range("B2").End(xlDown).Select
+
+ActiveWorkbook.Sheets("JEL").Select
+    Sheets("JEL").Range("B2", Range("B2").End(xlDown)).Select
     Selection.Copy
-s4.Range("A:A" & lastrow).Select
-    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+    
+ActiveWorkbook.Sheets("CONS").Select
+    Cells(lastrow + 1, 1).Select
+        Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
         :=False, Transpose:=False
+    
 
 End Sub
 
