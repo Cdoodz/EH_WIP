@@ -1,0 +1,228 @@
+Option Explicit
+
+Sub FormatJEL()
+
+'WORKS--SLOW
+
+'For Help Contact Amanda Norseth, Ext 55459, Created for Employee Health 2020.04.03
+'FOR COVID-19 RESPONSE--EMPLOYEE HEALTH RESPIRATORY COMPLIANCE REPORT
+'For use with JEL report from OHM
+
+'Deletes garbage rows
+'convert to number
+
+'Optimize Macro Speed
+Application.ScreenUpdating = False
+Application.EnableEvents = False
+Application.Calculation = xlCalculationManual
+
+'DECLARE VARIABLES
+Dim s3 As Worksheet
+Dim lastrow As Integer
+Dim rwr As Range
+Dim row As Range
+
+'SET DECLARED VARIABLES
+Set s3 = Sheets("JEL")
+lastrow = s3.Range("A10000").End(xlUp).row
+Set rwr = s3.Range("A2:A" & lastrow)
+
+'*********If employee cell empty, delete row***********
+For Each row In rwr
+On Error Resume Next
+    Columns("A").SpecialCells(xlBlanks).EntireRow.Delete
+Next row
+
+
+'***********Formatting JEL tab***************
+'Select all in JEL and convert to number
+    Sheets("JEL").Select
+    Range("A2:O2", Range("A2:O2").End(xlDown).End(xlToRight)).Select
+With Selection
+    .NumberFormat = "0"
+    .Value = .Value
+End With
+
+'Turn back on screen updating etc
+Application.ScreenUpdating = True
+Application.EnableEvents = True
+Application.Calculation = xlCalculationAutomatic
+
+End Sub
+
+Sub TableJEL()
+
+'WORKS
+
+'For Help Contact Amanda Norseth, Ext 55459, Created for Employee Health 2020.04.03
+'FOR COVID-19 RESPONSE--EMPLOYEE HEALTH RESPIRATORY COMPLIANCE REPORT
+
+'Convert JEL to table
+
+'DECLARE VARIABLES
+Dim s3 As Worksheet
+Dim tbl As ListObject
+Dim rng As Range
+Dim Name As String
+
+'SET DECLARED VARIABLES
+Set s3 = Sheets("JEL")
+'Set Name = "jelt"
+Set rng = s3.Range(Range("A1"), Range("A1").SpecialCells(xlLastCell))
+Set tbl = s3.ListObjects.Add(xlSrcRange, rng, , xlYes)
+
+s3.Range("b5").ListObject.Name = "jelt"
+tbl.TableStyle = "TableStyleLight11"
+
+
+
+End Sub
+
+Sub TablePop()
+'For Help Contact Amanda Norseth, Ext 55459, Created for Employee Health 2020.04.03
+'FOR COVID-19 RESPONSE--EMPLOYEE HEALTH RESPIRATORY COMPLIANCE REPORT
+
+'Convert Pop to table
+
+'DECLARE VARIABLES
+Dim s2 As Worksheet
+Dim tbl As ListObject
+Dim rng As Range
+Dim Name As String
+
+'SET DECLARED VARIABLES
+Set s2 = Sheets("POPREP")
+Set rng = s2.Range(Range("A3"), Range("A3").SpecialCells(xlLastCell))
+Set tbl = s2.ListObjects.Add(xlSrcRange, rng, , xlYes)
+
+
+s2.Range("b5").ListObject.Name = "popt"
+tbl.TableStyle = "TableStyleLight11"
+s2.ListObjects.Add(xlSrcRange, Range("A3:N3").End(xlDown).End(xlToRight), , xlYes).Name = _
+        "popt"
+
+
+
+End Sub
+
+
+Sub PopRepFormat()
+
+'For Help Contact Amanda Norseth, Ext 55459, Created for Employee Health 2020.04.03
+'FOR COVID-19 RESPONSE--EMPLOYEE HEALTH RESPIRATORY COMPLIANCE REPORT
+'for use with OHM population report VM and crothall
+
+'delete each row with date of report and headings
+
+'DECLARE VARIABLES
+Dim s2 As Worksheet
+Dim lar As Integer
+Dim rwrn As Range
+Dim row As Range
+
+'SET DECLARED VARIABLES
+Set s2 = Sheets("POPREP")
+Set lar = s2.Range("A10000").End(xlUp).row
+Set rwrn = s2.Range("A4:A" & lr)
+
+For Each row In rwrn
+On Error Resume Next
+    Columns("B4:B").SpecialCells(xlBlanks).EntireRow.Delete
+Next row
+
+With rwrn
+ .Replace "Current Population List", True, xlWhole
+ .SpecialCells(xlCellTypeConstants, 4).EntireRow.Delete
+ End With
+
+With rwrn
+ .Replace "VMEMP", True, xlWhole
+ .SpecialCells(xlCellTypeConstants, 4).EntireRow.Delete
+ End With
+
+End Sub
+
+Sub CombiNums()
+
+'For Help Contact Amanda Norseth, Ext 55459, Created for Employee Health 2020.04.03
+'FOR COVID-19 RESPONSE--EMPLOYEE HEALTH RESPIRATORY COMPLIANCE REPORT
+
+'combines all employee numbers from both reports poprep and JEL
+
+'DECLARE VARIABLES
+Dim s2 As Worksheet
+Dim s3 As Worksheet
+Dim s4 As Worksheet
+Dim lastrow As Long
+
+'SET DECLARED VARIABLES
+Set s2 = Sheets("POPREP")
+Set s3 = Sheets("JEL")
+Set s4 = Sheets("CONS")
+Set lastrow = Cells(Rows.Count, 1).End(xlUp).row
+
+'Copy empnos from POP report
+s2.Range("A4").End(xlDown).Select
+    Selection.Copy
+s4.Range("A4").Select
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+        
+'Copy empnos from JEL report
+s3.Range("B2").End(xlDown).Select
+    Selection.Copy
+s4.Range("A:A" & lastrow).Select
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+
+End Sub
+
+Sub DeleteRows()
+'For Help Contact Amanda Norseth, Ext 55459, Created for Employee Health 2020.04.03
+'FOR COVID-19 RESPONSE--EMPLOYEE HEALTH RESPIRATORY COMPLIANCE REPORT
+
+'deletes rows after row 100 from LIST tab
+
+'DECLARE VARIABLES
+Dim s5 As Worksheet
+Dim lastrow As Long
+
+'SET DECLARED VARIABLES
+Set s5 = Sheets("LIST")
+Set lastrow = Cells(Rows.Count, 1).End(xlUp).row
+
+s5.Rows("101:101").Select
+Range(Selection, Selection.End(xlDown)).Select
+Selection.Delete Shift:=xlUp
+
+End Sub
+
+Sub PasteList()
+
+'For Help Contact Amanda Norseth, Ext 55459, Created for Employee Health 2020.04.03
+'FOR COVID-19 RESPONSE--EMPLOYEE HEALTH RESPIRATORY COMPLIANCE REPORT
+
+'Copy employee nums to List table
+
+'DECLARE VARIABLES
+Dim s4 As Worksheet
+Dim s5 As Worksheet
+Dim lastrow As Long
+
+'SET DECLARED VARIABLES
+Set s4 = Sheets("CONS")
+Set s5 = Sheets("LIST")
+Set lastrow = Cells(Rows.Count, 1).End(xlUp).row
+
+s4.Range("A4").End(xlDown).Select
+    Selection.Copy
+s5.Range("A4").Select
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+
+End Sub
+
+
+
+
+
