@@ -164,6 +164,7 @@ Set s4 = Sheets("CONS")
 lastrow = ActiveSheet.Range("A20000").End(xlUp).row
 's4.Range("A20000").End(xlUp).row
 
+
 'Copy empnos from POP report
 
 ActiveWorkbook.Sheets("POPREP").Select
@@ -182,9 +183,23 @@ ActiveWorkbook.Sheets("JEL").Select
     Selection.Copy
     
 ActiveWorkbook.Sheets("CONS").Select
-    Cells(lastrow + 1, 1).Select
-        Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
-        :=False, Transpose:=False
+    Sheets("CONS").Range("A1").End(xlDown).Offset(1, 0).Select
+       Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+       :=False, Transpose:=False
+
+   '   Range(Cells(lastrow, 1), Cells(lastrow, 1)).Offset(1, 0).Select
+ '       Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+ '       :=False, Transpose:=False
+
+
+
+
+ '   Range(Cells(lastrow, 1), Cells(lastrow, 1)).Offset(1, 0).Select
+ '       Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+ '       :=False, Transpose:=False
+ '   Cells(lastrow + 1, 1).Select
+  '      Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+   '     :=False, Transpose:=False
     
 
 End Sub
